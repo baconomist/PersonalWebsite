@@ -8,6 +8,8 @@ interface IProps
     playing?: boolean;
     multiTexts?: string[];
     text?: string;
+
+    style?: React.CSSProperties;
 }
 
 interface IState
@@ -113,7 +115,7 @@ class TypingText extends React.Component<IProps, IState>
 
     render()
     {
-        return <h1>{this.state.text}</h1>;
+        return <h1 style={this.props.style ? this.props.style : {}}>{this.state.text}</h1>;
     }
 
     finished()

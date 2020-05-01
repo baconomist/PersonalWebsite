@@ -7,70 +7,76 @@ import {TypingText, MultiTextTypingText} from "./typingText";
 import {ActionExecuter} from "./actionExecuter";
 import PageScrollButton from "./pageScrollButton";
 import $ from "jquery";
-
-if (document.getElementById("welcome"))
-{
-    ReactDOM.render(
-        <React.StrictMode>
-            <MultiTextTypingText multiTexts={["Hello!", "Hi"]}/>
-        </React.StrictMode>
-        , document.getElementById("welcome")
-    )
-}
-
-if (document.getElementById("intro"))
-{
-    let intro: TypingText = ReactDOM.render(
-        <TypingText text={"My name is Software Developer and I'm a Lucas Borowiecki!"} typingSpeed={30}
-                    playing={false}/>, document.getElementById("intro")) as unknown as TypingText;
+import Page from "./page";
+import Pages from "./pages";
 
 
-    let aBug: TypingText = ReactDOM.render(
-        <TypingText text={"That doesn't seem right... Let me fix that... Hold on..."} typingSpeed={30}
-                    playing={false}/>, document.getElementById("a-bug")) as unknown as TypingText;
+let pages: Pages = ReactDOM.render(<Pages/>, document.getElementById("pages")) as unknown as Pages;
 
-    let actionExec = new ActionExecuter(
+pages.addPage(<Page backgroundColor={"#2e3542"}>
+    <MultiTextTypingText multiTexts={["Hello!", "Hi"]}/>
+</Page>);
+
+let intro: TypingText | any = null;
+let aBug: TypingText | any = null;
+
+pages.addPage(<Page>
+    <TypingText text={"My name is Software Developer and I'm a Lucas Borowiecki!"}
+                typingSpeed={30}
+                playing={false}
+                ref={(r: TypingText) => intro = r}
+                style={{width: "50%"}}/>
+
+    <TypingText text={"That doesn't seem right... Let me fix that... Hold on..."}
+                typingSpeed={30}
+                playing={false}
+                ref={(r: TypingText) => aBug = r}
+                style={{width: "50%", color: "#24b3d7"}}/>
+</Page>);
+
+let actionExec = new ActionExecuter(
+    {
+        finished(): boolean
         {
-            finished(): boolean
-            {
-                return intro.finishedAddingText;
-            }, invoke(): void
-            {
-                intro.play();
-            }
-        },
+            return intro.finishedAddingText;
+        }, invoke(): void
         {
-            finished(): boolean
-            {
-                return aBug.finishedAddingText;
-            }, invoke(): void
-            {
-                aBug.play();
-            }
-        },
-        {
-            finished(): boolean
-            {
-                return intro.finishedAddingText;
-            }, invoke(): void
-            {
-                intro.changeText("My name is Lucas Borowiecki and I am a Software Developer.");
-            }
-        },
-        {
-            finished(): boolean
-            {
-                return aBug.finishedAddingText;
-            }, invoke(): void
-            {
-                aBug.changeText("There we go! Now that's more accurate, isn't it?");
-            }
+            intro.play();
         }
-    );
-    actionExec.invoke();
+    },
+    {
+        finished(): boolean
+        {
+            return aBug.finishedAddingText;
+        }, invoke(): void
+        {
+            aBug.play();
+        }
+    },
+    {
+        finished(): boolean
+        {
+            return intro.finishedAddingText;
+        }, invoke(): void
+        {
+            intro.changeText("My name is Lucas Borowiecki and I am a Software Developer.");
+        }
+    },
+    {
+        finished(): boolean
+        {
+            return aBug.finishedAddingText;
+        }, invoke(): void
+        {
+            aBug.changeText("There we go! Now that's more accurate, isn't it?");
+        }
+    }
+);
+actionExec.invoke();
 
-    new PageScrollButton($("#page-btn"), $(document), $("#pages"));
-}
+// Create a page scroll button, this feels kinda yucky just creating an instance like this...
+new PageScrollButton($("#page-btn"), $(document), pages);
+
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

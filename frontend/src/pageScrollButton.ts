@@ -1,18 +1,20 @@
 import $ from "jquery";
+import Pages from "./pages";
+import ReactDOM from "react-dom";
 
 class PageScrollButton
 {
     buttonJqueryElement: any;
     scrollJqueryElement: any;
-    pagesJqueryElement: any;
+    pages: Pages;
 
     currentPageIndex: number = 0;
 
-    constructor(buttonJqueryElement: any, scrollJqueryElement: any, pagesJqueryElement: any)
+    constructor(buttonJqueryElement: any, scrollJqueryElement: any, pages: Pages)
     {
         this.buttonJqueryElement = buttonJqueryElement;
         this.scrollJqueryElement = scrollJqueryElement;
-        this.pagesJqueryElement = pagesJqueryElement;
+        this.pages = pages;
 
         this.buttonJqueryElement.on("click", () => this.onClick());
         this.scrollJqueryElement.on("scroll", () => this.onScroll());
@@ -31,7 +33,7 @@ class PageScrollButton
         //     this.buttonJqueryElement.css("transform", "rotate(0deg)");
         // }
 
-        if(this.currentPageIndex === this.pagesJqueryElement.children().length - 1)
+        if(this.currentPageIndex === this.pages.pagesArray.length - 1)
             this.rotateButtonUp();
         else
             this.rotateButtonDown();
@@ -52,21 +54,23 @@ class PageScrollButton
     {
         let scrollToPageIndex = this.currentPageIndex + 1;
         this.currentPageIndex++;
-        if(scrollToPageIndex === this.pagesJqueryElement.children().length)
+        if(scrollToPageIndex === this.pages.pagesArray.length)
         {
             this.currentPageIndex = 0;
             scrollToPageIndex = this.currentPageIndex;
         }
 
-        this.scrollTo(($(`#page-${scrollToPageIndex + 1}`).offset() as any).top);
+        let rect: any = (ReactDOM.findDOMNode(this.pages.pagesArray[scrollToPageIndex].current) as any).getBoundingClientRect();
+        this.scrollTo(rect.top);
         this.updateButtonOrientation();
     }
 
     onScroll()
     {
-        for(let i = 0; i < this.pagesJqueryElement.children().length; i++)
+        for(let i = 0; i < this.pages.pagesArray.length; i++)
         {
-            if(this.scrollJqueryElement.scrollTop() < this.pagesJqueryElement.find(`#page-${i + 1}`).offset().top + this.pagesJqueryElement.find(`#page-${i + 1}`).height())
+            let rect: any = (ReactDOM.findDOMNode(this.pages.pagesArray[i].current) as any).getBoundingClientRect();
+            if(this.scrollJqueryElement.scrollTop() < rect.top + rect.height)
             {
                 this.currentPageIndex = i;
                 break;
