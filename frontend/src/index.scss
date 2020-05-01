@@ -66,14 +66,16 @@ code
 }
 
 
-@keyframes App-logo-spin
-{
-    from
-    {
-        transform: rotate(0deg);
-    }
-    to
-    {
-        transform: rotate(360deg);
-    }
+::-webkit-scrollbar {
+    width: 0px;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #FF0000;
+}
+
+/* Hide scrollbar for IE and Edge */
+.hideScroll {
+    -ms-overflow-style: none;
 }
