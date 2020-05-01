@@ -5,6 +5,8 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {TypingText, MultiTextTypingText} from "./typingText";
 import {ActionExecuter} from "./actionExecuter";
+import PageScrollButton from "./pageScrollButton";
+import $ from "jquery";
 
 if (document.getElementById("welcome"))
 {
@@ -18,7 +20,6 @@ if (document.getElementById("welcome"))
 
 if (document.getElementById("intro"))
 {
-
     let intro: TypingText = ReactDOM.render(
         <TypingText text={"My name is Software Developer and I'm a Lucas Borowiecki!"} typingSpeed={30}
                     playing={false}/>, document.getElementById("intro")) as unknown as TypingText;
@@ -68,10 +69,8 @@ if (document.getElementById("intro"))
     );
     actionExec.invoke();
 
-    if (intro == null || aBug == null)
-        new DOMException("Elements Cannot Be Null");
+    new PageScrollButton($("#page-btn"), $(document), $("#pages"));
 }
-
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

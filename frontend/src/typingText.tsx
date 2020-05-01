@@ -98,7 +98,7 @@ class TypingText extends React.Component<IProps, IState>
                 this._waitTimer = 0;
                 this._removingText = false;
             }
-            
+
             this._waitTimer += this._typingSpeed;
         }
     }
