@@ -33,7 +33,7 @@ class PageScrollButton
         //     this.buttonJqueryElement.css("transform", "rotate(0deg)");
         // }
 
-        if(this.currentPageIndex === this.pages.pagesArray.length - 1)
+        if (this.currentPageIndex === this.pages.pagesArray.length - 1)
             this.rotateButtonUp();
         else
             this.rotateButtonDown();
@@ -54,7 +54,7 @@ class PageScrollButton
     {
         let scrollToPageIndex = this.currentPageIndex + 1;
         this.currentPageIndex++;
-        if(scrollToPageIndex === this.pages.pagesArray.length)
+        if (scrollToPageIndex === this.pages.pagesArray.length)
         {
             this.currentPageIndex = 0;
             scrollToPageIndex = this.currentPageIndex;
@@ -67,10 +67,10 @@ class PageScrollButton
 
     onScroll()
     {
-        for(let i = 0; i < this.pages.pagesArray.length; i++)
+        for (let i = 0; i < this.pages.pagesArray.length; i++)
         {
             let rect: any = (ReactDOM.findDOMNode(this.pages.pagesArray[i].current) as any).getBoundingClientRect();
-            if(this.scrollJqueryElement.scrollTop() < rect.top + rect.height)
+            if (this.scrollJqueryElement.scrollTop() < rect.top + rect.height)
             {
                 this.currentPageIndex = i;
                 break;

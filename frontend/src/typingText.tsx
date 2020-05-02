@@ -1,5 +1,4 @@
 import React from "react";
-import {IAction} from "./actionExecuter";
 
 interface IProps
 {
@@ -10,6 +9,7 @@ interface IProps
     text?: string;
 
     style?: React.CSSProperties;
+    className?: string;
 }
 
 interface IState
@@ -115,7 +115,7 @@ class TypingText extends React.Component<IProps, IState>
 
     render()
     {
-        return <h1 style={this.props.style ? this.props.style : {}}>{this.state.text}</h1>;
+        return <h1 style={this.props.style ? this.props.style : {}} className={this.props.className ? this.props.className : ""}>{this.state.text}</h1>;
     }
 
     finished()

@@ -16,11 +16,6 @@ class Page extends React.Component<IProps, IState>
 
     div: any;
 
-    constructor(props: IProps)
-    {
-        super(props);
-    }
-
     render(): React.ReactNode
     {
         return (
@@ -28,11 +23,6 @@ class Page extends React.Component<IProps, IState>
                 {this.props.children}
             </div>
         );
-    }
-
-    getTop()
-    {
-        return this.div.offsetTop;
     }
 }
 

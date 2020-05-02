@@ -48,13 +48,13 @@ code
 hr.page-separator
 {
   position: absolute;
-  border:none;
-  border-top:50px dashed #24b3d7;
-  color:$BG_COLOR;
+  border: none;
+  border-top: 50px dashed #24b3d7;
+  color: $BG_COLOR;
   background-color: $BG_COLOR;
-  height:1px;
-  width:500%;
-  margin:0;
+  height: 1px;
+  width: 500%;
+  margin: 0;
 
   animation-name: page-separator-anim;
   animation-duration: 4s;
@@ -65,27 +65,29 @@ hr.page-separator
 {
   0%
   {
-    left:-50%;
+    left: -50%;
   }
   50%
   {
-    left:-25%;
+    left: -25%;
   }
   100%
   {
-    left:-50%;
+    left: -50%;
   }
 }
 
 .page
 {
   display: flex;
-  min-height: 100vh;
+  max-width: 100vw;
+  height: 100vh;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  overflow: hidden;
 }
 
 #page-btn
@@ -94,7 +96,7 @@ hr.page-separator
   position: fixed;
 
   $size: 50px;
-  left: calc(50% - #{$size}/2);
+  left: calc(50% - #{$size} / 2);
   bottom: 10%;
   width: $size;
   height: $size;
@@ -112,6 +114,76 @@ hr.page-separator
 #page-btn:active
 {
   background-color: #2e3542;
+}
+
+@keyframes slideshow-fadein
+{
+  from
+  {
+    opacity: 0;
+    filter: blur(5px);
+    transform: scale(1);
+  }
+  to
+  {
+    opacity: 1;
+    filter: blur(0px);
+    transform: scale(1.2);
+  }
+}
+
+@keyframes slideshow-fadeout
+{
+  from
+  {
+    opacity: 1;
+    filter: blur(0px);
+    transform: scale(1.2);
+  }
+  to
+  {
+    opacity: 0;
+    filter: blur(5px);
+    transform: scale(1);
+  }
+}
+
+.slide
+{
+  width: 100vw;
+  height: 100vh;
+  background-position: 10%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  //display: block;
+}
+
+/* Apply this style to any element that has both the class "slideshow" and "fadein". */
+.slide.fadein
+{
+  animation: slideshow-fadein;
+  animation-duration: 5s;
+  // Keep animation properties when finished rather than resetting
+  animation-fill-mode: forwards;
+
+  opacity: 1;
+  filter: blur(0px);
+}
+
+.slide.fadeout
+{
+  animation: slideshow-fadeout;
+  animation-duration: 5s;
+  // Keep animation properties when finished rather than resetting
+  animation-fill-mode: forwards;
+
+  opacity: 0;
+  filter: blur(5px);
+}
+
+.outlined-text
+{
+  -webkit-text-stroke: 1px #2e3542;
 }
 
 
