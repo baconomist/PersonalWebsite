@@ -145,6 +145,11 @@ class MultiTextTypingText extends TypingText
         this._texts = props.multiTexts ? props.multiTexts : ["Please define a MultiTexts={} attribute."];
     }
 
+    finished(): boolean
+    {
+        return super.finished() && this._currentTextIndex === this._texts.length - 1;
+    }
+
     tick()
     {
         super.tick();
