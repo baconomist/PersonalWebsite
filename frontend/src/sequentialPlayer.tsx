@@ -25,7 +25,31 @@ class SequentialObject extends React.Component<IPropsSeqObj, IStateSeqObj>
 
     render(): React.ReactNode
     {
-        return (<div>{this.props.children}</div>);
+        return this.props.children;
+    }
+}
+
+class SequentialRenderObject extends React.Component<IPropsSeqObj, IStateSeqObj>
+{
+    private _isActive: boolean = false;
+
+    activate()
+    {
+        this._isActive = true;
+        this.props.onActivatedCallback();
+        this.forceUpdate();
+    }
+
+    isFinished()
+    {
+        return this.props.isFinished();
+    }
+
+    render(): React.ReactNode
+    {
+        if(this._isActive)
+            return this.props.children;
+        return (<></>);
     }
 }
 
@@ -86,8 +110,8 @@ class SequentialPlayer extends React.Component<IPropsSeqPlayer, IStateSeqPlayer>
 
     render(): React.ReactNode
     {
-        return (<div>{this._clonedChildren}</div>);
+        return this._clonedChildren;
     }
 }
 
-export {SequentialObject, SequentialPlayer};
+export {SequentialObject, SequentialRenderObject, SequentialPlayer};
