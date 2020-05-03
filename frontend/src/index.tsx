@@ -10,6 +10,29 @@ import $ from "jquery";
 import Page from "./page";
 import Pages from "./pages";
 import {SlideShow, Slide} from "./slideShow";
+import Music from "./music";
+
+
+let music: RefObject<Music> = React.createRef<Music>();
+// Add some music
+ReactDOM.render(<Music src={require('./assets/Kastis Torrau & Arnas D - Reflection (Original Mix).mp3')}
+                       autoplay={false} loop={true} volume={0.05}
+                       ref={music}></Music>, document.getElementById("music"));
+
+function onMusicState(enabled: boolean)
+{
+    if (enabled)
+        music.current?.play();
+    $(".popup").removeClass("fadein").addClass("fadeout")
+
+    // Hide popup on animation finished using display: none to prevent ui events from propagating
+    $(".popup").one("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", () => $(".popup").hide());
+
+    renderIndex();
+}
+
+$("#music-yes").on("click", () => onMusicState(true));
+$("#music-no").on("click", () => onMusicState(false));
 
 let pages: Pages = ReactDOM.render(<Pages/>, document.getElementById("pages")) as unknown as Pages;
 
