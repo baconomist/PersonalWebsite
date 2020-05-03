@@ -10,6 +10,8 @@ interface IProps
 
     style?: React.CSSProperties;
     className?: string;
+
+    prevTypingText?: React.RefObject<SequentialOnViewedTypingText>;
 }
 
 interface IState
@@ -113,9 +115,17 @@ class TypingText extends React.Component<IProps, IState>
         this.finishedAddingText = false;
     }
 
+    addText(textToAdd: string)
+    {
+        this._waitTimer = -1;
+        this.currentText = this.currentText + textToAdd;
+        this.finishedAddingText = false;
+    }
+
     render()
     {
-        return <h1 style={this.props.style ? this.props.style : {}} className={this.props.className ? this.props.className : ""}>{this.state.text}</h1>;
+        return <h1 style={this.props.style ? this.props.style : {}}
+                   className={this.props.className ? this.props.className : ""}>{this.state.text}</h1>;
     }
 
     finished()
@@ -147,4 +157,13 @@ class MultiTextTypingText extends TypingText
     }
 }
 
-export {TypingText, MultiTextTypingText};
+class SequentialOnViewedTypingText extends TypingText
+{
+    tick()
+    {
+        if (this.props.prevTypingText?.current?.finishedAddingText)
+            super.tick();
+    }
+}
+
+export {TypingText, MultiTextTypingText, SequentialOnViewedTypingText};

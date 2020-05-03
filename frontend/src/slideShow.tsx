@@ -94,7 +94,7 @@ class SlideShow extends React.Component<IProps, IState>
 
     render()
     {
-        return (<div style={{position: "absolute"}}>{this.slides[this.currentSlideIndex]}</div>);
+        return (<div>{this.slides[this.currentSlideIndex]}</div>);
     }
 
     addSlide(page: JSX.Element)

@@ -13,7 +13,6 @@ export class ActionExecuter implements IAction
     constructor(...actions: IAction[])
     {
         this._actions = actions;
-        setInterval(() => this.tick(), 100)
     }
 
     tick()
@@ -28,6 +27,7 @@ export class ActionExecuter implements IAction
     invoke(): void
     {
         this._actions[0].invoke();
+        setInterval(() => this.tick(), 100)
     }
 
     finished(): boolean

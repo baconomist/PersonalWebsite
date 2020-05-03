@@ -1,15 +1,15 @@
-import React from 'react';
+import React, {RefObject} from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {TypingText, MultiTextTypingText} from "./typingText";
+import {MultiTextTypingText, TypingText} from "./typingText";
 import {ActionExecuter} from "./actionExecuter";
 import PageScrollButton from "./pageScrollButton";
 import $ from "jquery";
 import Page from "./page";
 import Pages from "./pages";
-import {SlideShow, Slide} from "./slideShow";
+import {Slide, SlideShow} from "./slideShow";
+import OnVisibilityChange from "./onVisibilityChange";
 import Music from "./music";
 
 
@@ -34,85 +34,145 @@ function onMusicState(enabled: boolean)
 $("#music-yes").on("click", () => onMusicState(true));
 $("#music-no").on("click", () => onMusicState(false));
 
-let pages: Pages = ReactDOM.render(<Pages/>, document.getElementById("pages")) as unknown as Pages;
+function renderIndex()
+{
+    let pages: Pages = ReactDOM.render(<Pages/>, document.getElementById("pages")) as unknown as Pages;
 
-let slideShow: React.RefObject<SlideShow> = React.createRef<SlideShow>();
-let intro: React.RefObject<TypingText> = React.createRef<TypingText>();
-let aBug: React.RefObject<TypingText> = React.createRef<TypingText>();
-
-pages.addPage(<Page backgroundColor={"#2e3542"}>
-    <TypingText text={"My name is Software Developer and I'm a Lucas Borowiecki!"}
+    /**
+     * Page 1
+     * **/
+    let slideShow: React.RefObject<SlideShow> = React.createRef<SlideShow>();
+    let text1: RefObject<MultiTextTypingText> = React.createRef<MultiTextTypingText>();
+    let text2: RefObject<TypingText> = React.createRef<TypingText>();
+    pages.addPage(<Page>
+        <div style={{zIndex: 1}}>
+            <MultiTextTypingText
+                multiTexts={["Welcome.", "This here is my wonderful ReactJS website.", "Came here to learn all about me did you?", "Just scroll on down if that's the case!"]}
                 typingSpeed={30}
-                playing={false}
-                ref={intro}
-                style={{width: "50%", zIndex: 1}}
+                waitInterval={1500}
+                ref={text1}
                 className={"outlined-text"}
-    />
+                style={{marginLeft: "10%", marginRight: "10%", textAlign: "center"}}
+            />
+        </div>
 
-    <TypingText text={"That doesn't seem right... Let me fix that... Hold on..."}
-                typingSpeed={30}
-                playing={false}
-                ref={aBug}
-                style={{width: "50%", color: "#24b3d7", zIndex: 1}}/>
+        <SlideShow ref={slideShow}/>
+    </Page>);
 
-    <SlideShow ref={slideShow}/>
-    {/*<MultiTextTypingText multiTexts={["Hello!", "Hi"]}/>*/}
-</Page>);
+    /**
+     * Page separator
+     * **/
+    pages.insertPageSeparator(<div style={{overflow: "hidden"}}>
+        <hr className="page-separator"/>
+    </div>);
 
-pages.addPage(<Page><h1>TODO: add content...</h1></Page>);
+    /**
+     * Page 2
+     * **/
+    let intro: React.RefObject<TypingText> = React.createRef<TypingText>();
+    let aBug: React.RefObject<TypingText> = React.createRef<TypingText>();
 
-
-// Slideshow
-(slideShow.current as SlideShow).addSlide(<Slide style={{backgroundImage: `url(${require('./assets/slideshow/code.png')})`}}/>);
-(slideShow.current as SlideShow).addSlide(<Slide style={{backgroundImage: `url(${require('./assets/slideshow/code2.png')})`}}/>);
-(slideShow.current as SlideShow).addSlide(<Slide style={{backgroundImage: `url(${require('./assets/slideshow/monstersmash.png')})`}}/>);
-(slideShow.current as SlideShow).addSlide(<Slide style={{backgroundImage: `url(${require('./assets/slideshow/monstersmash_banner.png')})`}}/>);
-(slideShow.current as SlideShow).addSlide(<Slide style={{backgroundImage: `url(${require('./assets/slideshow/tprush.png')})`}}/>);
-
-let actionExec = new ActionExecuter(
-    {
-        finished(): boolean
+    pages.addPage(<Page backgroundColor={"#2e3542"}>
+        <OnVisibilityChange onVisibilityChangedCallback={(isVisible: boolean) =>
         {
-            return (intro.current as TypingText).finishedAddingText;
-        }, invoke(): void
+            if (isVisible) intro.current?.play();
+        }} style={{textAlign: "center"}}>
+            <TypingText text={"My name is Software Developer and I'm a Lucas Borowiecki!"}
+                        typingSpeed={50}
+                        playing={false}
+                        ref={intro}
+                        style={{width: "50%", color: "#f3b721"}}
+            />
+
+            <TypingText text={"That doesn't seem right... Let me fix that... Hold on..."}
+                        typingSpeed={30}
+                        playing={false}
+                        ref={aBug}
+                        style={{width: "50%", color: "#24b3d7"}}
+            />
+        </OnVisibilityChange>
+
+        {/*<MultiTextTypingText multiTexts={["Hello!", "Hi"]}/>*/}
+    </Page>);
+
+
+    /**
+     * Slideshow
+     * **/
+    // Robotics
+    (slideShow.current as SlideShow).addSlide(<Slide
+        style={{
+            backgroundImage: `url(${require('./assets/slideshow/robotics2.jpg')})`,
+            backgroundPosition: "0 20%"
+        }}/>);
+    (slideShow.current as SlideShow).addSlide(<Slide
+        style={{
+            backgroundImage: `url(${require('./assets/slideshow/robotics3.jpg')})`,
+            backgroundPosition: "0 20%"
+        }}/>);
+    (slideShow.current as SlideShow).addSlide(<Slide
+        style={{backgroundImage: `url(${require('./assets/slideshow/robotics.jpg')})`, backgroundPosition: "0 20%"}}/>);
+
+    // MonsterSmash
+    (slideShow.current as SlideShow).addSlide(<Slide
+        style={{backgroundImage: `url(${require('./assets/slideshow/monstersmash.png')})`}}/>);
+    (slideShow.current as SlideShow).addSlide(<Slide
+        style={{backgroundImage: `url(${require('./assets/slideshow/monstersmash_banner.png')})`}}/>);
+    (slideShow.current as SlideShow).addSlide(<Slide
+        style={{backgroundImage: `url(${require('./assets/slideshow/tprush.png')})`}}/>);
+
+    // Code
+    (slideShow.current as SlideShow).addSlide(<Slide
+        style={{backgroundImage: `url(${require('./assets/slideshow/code.png')})`}}/>);
+    (slideShow.current as SlideShow).addSlide(<Slide
+        style={{backgroundImage: `url(${require('./assets/slideshow/code2.png')})`}}/>);
+
+    let actionExec: ActionExecuter = new ActionExecuter(
         {
-            (intro.current as TypingText).play();
+            finished(): boolean
+            {
+                return (intro.current as TypingText).finishedAddingText && (intro.current as TypingText).playing;
+            }, invoke(): void
+            {
+                // Let the onViewChanged component invoke the intro text
+            }
+        },
+        {
+            finished(): boolean
+            {
+                return (aBug.current as TypingText).finishedAddingText;
+            }, invoke(): void
+            {
+                (aBug.current as TypingText).play();
+            }
+        },
+        {
+            finished(): boolean
+            {
+                return (intro.current as TypingText).finishedAddingText;
+            }, invoke(): void
+            {
+                (intro.current as TypingText).changeText("My name is Lucas Borowiecki and I am a Software Developer." +
+                    " Robotics Engineer, Game Developer, and Web Developer. Basically a full-stack software person!");
+            }
+        },
+        {
+            finished(): boolean
+            {
+                return (aBug.current as TypingText).finishedAddingText;
+            }, invoke(): void
+            {
+                (aBug.current as TypingText).changeText("There we go! Now that's more accurate, isn't it?");
+            }
         }
-    },
-    {
-        finished(): boolean
-        {
-            return (aBug.current as TypingText).finishedAddingText;
-        }, invoke(): void
-        {
-            (aBug.current as TypingText).play();
-        }
-    },
-    {
-        finished(): boolean
-        {
-            return (intro.current as TypingText).finishedAddingText;
-        }, invoke(): void
-        {
-            (intro.current as TypingText).changeText("My name is Lucas Borowiecki and I am a Software Developer.");
-        }
-    },
-    {
-        finished(): boolean
-        {
-            return (aBug.current as TypingText).finishedAddingText;
-        }, invoke(): void
-        {
-            (aBug.current as TypingText).changeText("There we go! Now that's more accurate, isn't it?");
-        }
-    }
-);
-actionExec.invoke();
+    );
+    actionExec.invoke();
 
-// Create a page scroll button, this feels kinda yucky just creating an instance like this...
-new PageScrollButton($("#page-btn"), $(document), pages);
+    // Create a page scroll button, this feels kinda yucky just creating an instance like this...
+    new PageScrollButton($("#page-btn"), $(document), pages);
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+    // If you want your app to work offline and load faster, you can change
+    // unregister() to register() below. Note this comes with some pitfalls.
+    // Learn more about service workers: https://bit.ly/CRA-PWA
+    serviceWorker.unregister();
+}
